@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CdDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_DRAW, &CdDlg::OnBnClickedBtnDraw)
 	ON_BN_CLICKED(IDC_BTN_ERASE, &CdDlg::OnBnClickedBtnErase)
 	ON_BN_CLICKED(IDC_BTN_ALLDELETE, &CdDlg::OnBnClickedBtnAlldelete)
+	ON_BN_CLICKED(IDC_BUTTON_COLOR, &CdDlg::OnBnClickedButtonColor)
 END_MESSAGE_MAP()
 
 
@@ -193,6 +194,12 @@ void CdDlg::OnLButtonDown(UINT nFlags, CPoint point) // 왼쪽 마우스 버튼 
 	CPoint temp = ConvertGlobalCoorToBlockCoor(point);
 	CPoint temp2 = ConvertBlockCoorToGlobalCoor(temp);
 	CClientDC dc(this);
+
+	CBrush brush;
+	brush.CreateSolidBrush(m_color);
+	CBrush* oldBrush = dc.SelectObject(&brush);
+
+
 	if (PresentState==State::CREATE) {
 		/*CString str;
 		str.Format(_T("%d %d"), temp.x, temp.y);
@@ -208,7 +215,6 @@ void CdDlg::OnLButtonDown(UINT nFlags, CPoint point) // 왼쪽 마우스 버튼 
 			deleteBlock(temp.x - 301, temp.y - 301);
 			
 			//dc.Rectangle(temp2.x - 10, temp2.y - 10, temp2.x + 10, temp2.y + 10);
-			
 			
 		}
 
@@ -265,4 +271,15 @@ void CdDlg::OnBnClickedBtnAlldelete()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	Invalidate(TRUE);
+}
+
+
+void CdDlg::OnBnClickedButtonColor()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CColorDialog colorDlg(RGB(0, 0, 0));
+	if (colorDlg.DoModal() == IDOK)
+	{
+		m_color = colorDlg.GetColor();
+	}
 }

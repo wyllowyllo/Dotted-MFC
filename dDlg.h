@@ -34,6 +34,9 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
+	COLORREF m_color;
+
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	void createBlock(int x, int y, CString color);
@@ -47,4 +50,5 @@ public:
 	afx_msg void OnBnClickedBtnDraw();
 	afx_msg void OnBnClickedBtnErase();
 	afx_msg void OnBnClickedBtnAlldelete();
+	afx_msg void OnBnClickedButtonColor();
 };
