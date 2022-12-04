@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define SAVEPATH "C:/Users\sea51/Documents/GitHub\Dotted-MFC/res"
+
 enum class State { //생성 or 삭제
 	CREATE, ERASE
 };
@@ -35,7 +37,10 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 
+	CPaintDC* dc;
 	COLORREF m_color;
+	CClientDC* rdc;
+	CImage dotimage;
 
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -45,10 +50,13 @@ public:
 	CPoint ConvertGlobalCoorToBlockCoor(CPoint GlobalCoor);
 	CPoint ConvertBlockCoorToGlobalCoor(CPoint BlockCoor);
 	int blockData[30][30] = { 0 }; //각 칸의 블록 데이터
+	COLORREF blockColor[30][30];
 	State PresentState;
 
 	afx_msg void OnBnClickedBtnDraw();
 	afx_msg void OnBnClickedBtnErase();
 	afx_msg void OnBnClickedBtnAlldelete();
 	afx_msg void OnBnClickedButtonColor();
+	afx_msg void OnBnClickedBtnsave();
+	afx_msg void OnBnClickedBtnload();
 };

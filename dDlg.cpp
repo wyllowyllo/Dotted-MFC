@@ -76,6 +76,8 @@ BEGIN_MESSAGE_MAP(CdDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_ERASE, &CdDlg::OnBnClickedBtnErase)
 	ON_BN_CLICKED(IDC_BTN_ALLDELETE, &CdDlg::OnBnClickedBtnAlldelete)
 	ON_BN_CLICKED(IDC_BUTTON_COLOR, &CdDlg::OnBnClickedButtonColor)
+	ON_BN_CLICKED(IDC_BTNSAVE, &CdDlg::OnBnClickedBtnsave)
+	ON_BN_CLICKED(IDC_BTNLOAD, &CdDlg::OnBnClickedBtnload)
 END_MESSAGE_MAP()
 
 
@@ -112,6 +114,8 @@ BOOL CdDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	PresentState = State::CREATE;
+	CRect m_rect;
+	this->GetWindowRect(m_rect);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -162,18 +166,23 @@ void CdDlg::OnPaint()
 	{
 		//한 칸 길이는 20
 		//가로, 세로 전체 길이는 20*30=600
-		CPaintDC dc(this);
+		dc=new CPaintDC(this);
 		for (int y = 0; y < 30; y++)
 			for (int x = 0; x < 30; x++)
-				dc.Rectangle((1 + x) * BLOCKWIDTH, (1 + y) * BLOCKWIDTH, (BLOCKWIDTH * (x + 2)) + 1, (BLOCKWIDTH * (y + 2)) + 1);
+				dc->Rectangle((1 + x) * BLOCKWIDTH, (1 + y) * BLOCKWIDTH, (BLOCKWIDTH * (x + 2)) + 1, (BLOCKWIDTH * (y + 2)) + 1);
 		CDC MemDC;
-		MemDC.CreateCompatibleDC(&dc);
+		MemDC.CreateCompatibleDC(dc);
 		CBitmap image;
 		image.LoadBitmap(IDB_IMAGE);
 		CBitmap* oldImage = MemDC.SelectObject(&image);
-		dc.BitBlt(20, 20, 620, 620, &MemDC, 30, 40, SRCAND);
-		dc.SelectObject(oldImage);
+		dc->BitBlt(20, 20, 620, 620, &MemDC, 30, 40, SRCAND);
+		dc->SelectObject(oldImage);
 		
+
+		rdc = new CClientDC(this);
+		dotimage.Create(600, 400, 24);
+
+
 	}
 }
 
@@ -193,11 +202,10 @@ void CdDlg::OnLButtonDown(UINT nFlags, CPoint point) // 왼쪽 마우스 버튼 
 	if (point.y> HEIGHT+20 || point.y <20 ) return;
 	CPoint temp = ConvertGlobalCoorToBlockCoor(point);
 	CPoint temp2 = ConvertBlockCoorToGlobalCoor(temp);
-	CClientDC dc(this);
-
+	
 	CBrush brush;
 	brush.CreateSolidBrush(m_color);
-	CBrush* oldBrush = dc.SelectObject(&brush);
+	CBrush* oldBrush = rdc->SelectObject(&brush);
 
 
 	if (PresentState==State::CREATE) {
@@ -207,7 +215,7 @@ void CdDlg::OnLButtonDown(UINT nFlags, CPoint point) // 왼쪽 마우스 버튼 
 		
 		if (blockData[temp.x-301][temp.y-301] != 1) {
 			createBlock(temp.x-301, temp.y-301, NULL);
-			dc.Rectangle(temp2.x - 10, temp2.y - 10, temp2.x + 10, temp2.y + 10);
+			rdc->Rectangle(temp2.x - 10, temp2.y - 10, temp2.x + 10, temp2.y + 10);
 		}
 	}
 	else if (PresentState == State::ERASE) {
@@ -226,7 +234,7 @@ void CdDlg::OnLButtonDown(UINT nFlags, CPoint point) // 왼쪽 마우스 버튼 
 void CdDlg::createBlock(int x, int y, CString color) //블럭 생성 함수
 {
 	blockData[x][y] = 1;
-
+	blockColor[x][y] = m_color;
 }
 
 void CdDlg::deleteBlock(int x, int y) //블록 제거 함수
@@ -271,6 +279,11 @@ void CdDlg::OnBnClickedBtnAlldelete()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	Invalidate(TRUE);
+	for (int i = 0; i < 30; i++) {
+		for (int j = 0; j < 30; j++) {
+			blockData[i][j] = 0;
+		}
+	}
 }
 
 
@@ -282,4 +295,51 @@ void CdDlg::OnBnClickedButtonColor()
 	{
 		m_color = colorDlg.GetColor();
 	}
+}
+
+
+void CdDlg::OnBnClickedBtnsave()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	
+	CDC* temp = CDC::FromHandle(dotimage.GetDC());
+	CPen* oldPen, pen;
+	
+	temp->Rectangle(20, 20, 620, 620);
+
+	for (int i = 0; i < 30; i++) {
+		for (int j = 0; j < 30; j++) {
+			if (blockData[i][j] == 1) {
+				CBrush brush;
+				brush.CreateSolidBrush(blockColor[i][j]);
+				CBrush* oldBrush = temp->SelectObject(&brush);
+				
+
+				pen.CreatePen(PS_SOLID, 1, blockColor[i][j]);
+				oldPen = temp->SelectObject(&pen);
+				
+
+				CPoint temp2 = ConvertBlockCoorToGlobalCoor(CPoint(i+301,j+301));
+				temp->Rectangle(temp2.x - 10, temp2.y - 10, temp2.x + 10, temp2.y + 10);
+				brush.DeleteObject();
+				pen.DeleteObject();
+			}
+		}
+	}
+	
+	ReleaseDC(rdc);
+	dotimage.ReleaseDC();
+	
+
+	dotimage.Save(TEXT("DottedImage.jpg"));
+	dotimage.Destroy();
+	MessageBox(_T("저장 완료"));
+	OnOK();
+}
+
+
+void CdDlg::OnBnClickedBtnload()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	OnOK();
 }
