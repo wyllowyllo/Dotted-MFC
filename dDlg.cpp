@@ -190,7 +190,7 @@ void CdDlg::OnPaint()
 			m_bmpBitmap.Destroy();
 			m_bmpBitmap.Load(strPathName);
 			//width = m_bmpBitmap.GetWidth();
-			height = m_bmpBitmap.GetHeight();
+			//height = m_bmpBitmap.GetHeight();
 			
 			m_bmpBitmap.BitBlt(dc->m_hDC, 20, 20, SRCAND);
 			//memdc.CreateCompatibleDC(dc);
@@ -207,7 +207,7 @@ void CdDlg::OnPaint()
 		}
 
 		rdc = new CClientDC(this);
-		dotimage.Create(600, 400, 24);
+		
 	}
 }
 
@@ -338,7 +338,7 @@ void CdDlg::OnBnClickedButtonColor()
 void CdDlg::OnBnClickedBtnsave()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	
+	dotimage.Create(600, 400, 24);
 	CDC* temp = CDC::FromHandle(dotimage.GetDC());
 	CPen* oldPen, pen;
 	
