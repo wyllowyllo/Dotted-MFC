@@ -170,19 +170,44 @@ void CdDlg::OnPaint()
 		for (int y = 0; y < 30; y++)
 			for (int x = 0; x < 30; x++)
 				dc->Rectangle((1 + x) * BLOCKWIDTH, (1 + y) * BLOCKWIDTH, (BLOCKWIDTH * (x + 2)) + 1, (BLOCKWIDTH * (y + 2)) + 1);
-		CDC MemDC;
+		/*CDC MemDC;
 		MemDC.CreateCompatibleDC(dc);
 		CBitmap image;
 		image.LoadBitmap(IDB_IMAGE);
 		CBitmap* oldImage = MemDC.SelectObject(&image);
 		dc->BitBlt(20, 20, 620, 620, &MemDC, 30, 40, SRCAND);
 		dc->SelectObject(oldImage);
-		
+		*/
+
+		// get picture-control dc
+		if (imageLoad == true) {
+			CDC memdc;
+			memdc.CreateCompatibleDC(dc);
+			
+			// load image jpg,bmp,png
+			CImage m_bmpBitmap;
+			int width, height;
+			m_bmpBitmap.Destroy();
+			m_bmpBitmap.Load(strPathName);
+			//width = m_bmpBitmap.GetWidth();
+			height = m_bmpBitmap.GetHeight();
+			
+			m_bmpBitmap.BitBlt(dc->m_hDC, 20, 20, SRCAND);
+			//memdc.CreateCompatibleDC(dc);
+			//m_bmpBitmap.Draw(/*memdc.*/dc->m_hDC, 0, 0, width, height);
+	
+				
+			//dc->BitBlt(20, 20, 620, 620, &memdc,30, 40, SRCPAINT);
+
+			// release dc to picture-control
+			//m_picture.ReleaseDC(pDc);
+
+			//pDc->DeleteDC();
+			//pDc = NULL;
+		}
 
 		rdc = new CClientDC(this);
 		dotimage.Create(600, 400, 24);
-
-
 	}
 }
 
@@ -265,6 +290,18 @@ void CdDlg::OnBnClickedBtnDraw() //그리기 버튼 콜백
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	PresentState = State::CREATE;
+
+	CString szFilter = _T("Image (*.BMP, *.PNG, *.JPG) | *.BMP;*.PNG;*.JPG | All Files(*.*)|*.*||");
+
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY, szFilter);
+
+	if (IDOK == dlg.DoModal())
+	{
+		strPathName = dlg.GetPathName();
+		this->imageLoad = true;
+		Invalidate();
+	}
+
 }
 
 

@@ -41,7 +41,8 @@ protected:
 	COLORREF m_color;
 	CClientDC* rdc;
 	CImage dotimage;
-
+	CString strPathName;
+	boolean imageLoad = false;
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	void createBlock(int x, int y, CString color);
