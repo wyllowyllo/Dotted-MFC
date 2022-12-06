@@ -60,4 +60,5 @@ public:
 	afx_msg void OnBnClickedButtonColor();
 	afx_msg void OnBnClickedBtnsave();
 	afx_msg void OnBnClickedBtnload();
+	CStatic m_Picture_Control;
 };

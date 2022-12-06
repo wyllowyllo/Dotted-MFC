@@ -204,6 +204,17 @@ void CdDlg::OnPaint()
 
 			//pDc->DeleteDC();
 			//pDc = NULL;
+			
+			/*
+			CRect rect;
+			m_Picture_Control.GetWindowRect(rect);
+			CDC* dc;
+			dc = m_Picture_Control.GetDC();
+			CImage image;
+			image.Load(strPathName);
+			image.StretchBlt(dc->m_hDC, 0, 0, rect.Width(), rect.Height(), SRCCOPY);
+			ReleaseDC(dc);
+			*/
 		}
 
 		rdc = new CClientDC(this);
