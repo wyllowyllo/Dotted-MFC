@@ -192,7 +192,7 @@ void CdDlg::OnPaint()
 			//width = m_bmpBitmap.GetWidth();
 			//height = m_bmpBitmap.GetHeight();
 			
-			m_bmpBitmap.BitBlt(dc->m_hDC, 20, 20, SRCAND);
+			m_bmpBitmap.StretchBlt(dc->m_hDC, 20, 20,601,601, SRCAND);
 			//memdc.CreateCompatibleDC(dc);
 			//m_bmpBitmap.Draw(/*memdc.*/dc->m_hDC, 0, 0, width, height);
 	
