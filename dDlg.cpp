@@ -349,7 +349,7 @@ void CdDlg::OnBnClickedButtonColor()
 void CdDlg::OnBnClickedBtnsave()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	dotimage.Create(600, 400, 24);
+	dotimage.Create(620, 620, 24);
 	CDC* temp = CDC::FromHandle(dotimage.GetDC());
 	CPen* oldPen, pen;
 	
