@@ -50,8 +50,8 @@ public:
 	CPoint pos;
 	CPoint ConvertGlobalCoorToBlockCoor(CPoint GlobalCoor);
 	CPoint ConvertBlockCoorToGlobalCoor(CPoint BlockCoor);
-	int blockData[30][30] = { 0 }; //각 칸의 블록 데이터
-	COLORREF blockColor[30][30];
+	int blockData[60][60] = { 0 }; //각 칸의 블록 데이터
+	COLORREF blockColor[60][60];
 	State PresentState;
 
 	afx_msg void OnBnClickedBtnDraw();

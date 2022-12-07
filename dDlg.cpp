@@ -12,8 +12,8 @@
 #define new DEBUG_NEW
 #endif
 
-#define BLOCKWIDTH 20
-#define BLOCKHEIGHT 20
+#define BLOCKWIDTH 10
+#define BLOCKHEIGHT 10
 #define WIDTH 600
 #define HEIGHT 600
 #define OFFSET CPoint(pos.x,pos.y) //좌표계 중간점
@@ -167,8 +167,8 @@ void CdDlg::OnPaint()
 		//한 칸 길이는 20
 		//가로, 세로 전체 길이는 20*30=600
 		dc=new CPaintDC(this);
-		for (int y = 0; y < 30; y++)
-			for (int x = 0; x < 30; x++)
+		for (int y = 0; y < 60; y++)
+			for (int x = 0; x < 60; x++)
 				dc->Rectangle((1 + x) * BLOCKWIDTH, (1 + y) * BLOCKWIDTH, (BLOCKWIDTH * (x + 2)) + 1, (BLOCKWIDTH * (y + 2)) + 1);
 		/*CDC MemDC;
 		MemDC.CreateCompatibleDC(dc);
@@ -234,8 +234,8 @@ HCURSOR CdDlg::OnQueryDragIcon()
 void CdDlg::OnLButtonDown(UINT nFlags, CPoint point) // 왼쪽 마우스 버튼 콜백함수
 {
 	
-	if (point.x > WIDTH+20 || point.x < 20) return;
-	if (point.y> HEIGHT+20 || point.y <20 ) return;
+	if (point.x > WIDTH+10 || point.x < 10) return;
+	if (point.y> HEIGHT+10 || point.y <0 ) return;
 	CPoint temp = ConvertGlobalCoorToBlockCoor(point);
 	CPoint temp2 = ConvertBlockCoorToGlobalCoor(temp);
 	
@@ -251,7 +251,7 @@ void CdDlg::OnLButtonDown(UINT nFlags, CPoint point) // 왼쪽 마우스 버튼 
 		
 		if (blockData[temp.x-301][temp.y-301] != 1) {
 			createBlock(temp.x-301, temp.y-301, NULL);
-			rdc->Rectangle(temp2.x - 10, temp2.y - 10, temp2.x + 10, temp2.y + 10);
+			rdc->Rectangle(temp2.x - 5, temp2.y - 5, temp2.x + 5, temp2.y + 5);
 		}
 	}
 	else if (PresentState == State::ERASE) {
@@ -327,8 +327,8 @@ void CdDlg::OnBnClickedBtnAlldelete()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	Invalidate(TRUE);
-	for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 30; j++) {
+	for (int i = 0; i < 60; i++) {
+		for (int j = 0; j < 60; j++) {
 			blockData[i][j] = 0;
 		}
 	}
@@ -355,8 +355,8 @@ void CdDlg::OnBnClickedBtnsave()
 	
 	temp->Rectangle(20, 20, 620, 620);
 
-	for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 30; j++) {
+	for (int i = 0; i < 60; i++) {
+		for (int j = 0; j < 60; j++) {
 			if (blockData[i][j] == 1) {
 				CBrush brush;
 				brush.CreateSolidBrush(blockColor[i][j]);
@@ -368,7 +368,7 @@ void CdDlg::OnBnClickedBtnsave()
 				
 
 				CPoint temp2 = ConvertBlockCoorToGlobalCoor(CPoint(i+301,j+301));
-				temp->Rectangle(temp2.x - 10, temp2.y - 10, temp2.x + 10, temp2.y + 10);
+				temp->Rectangle(temp2.x - 5, temp2.y - 5, temp2.x + 5, temp2.y + 5);
 				brush.DeleteObject();
 				pen.DeleteObject();
 			}
