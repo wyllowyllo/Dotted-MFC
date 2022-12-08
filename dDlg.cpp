@@ -170,6 +170,32 @@ void CdDlg::OnPaint()
 		for (int y = 0; y < 60; y++)
 			for (int x = 0; x < 60; x++)
 				dc->Rectangle((1 + x) * BLOCKWIDTH, (1 + y) * BLOCKWIDTH, (BLOCKWIDTH * (x + 2)) + 1, (BLOCKWIDTH * (y + 2)) + 1);
+		
+		CPen pen;
+		pen.CreatePen(PS_SOLID, 1, RGB(77, 77, 77));    
+		CPen* oldPen = dc->SelectObject(&pen);
+		CBrush brush;
+		brush.CreateSolidBrush(RGB(77, 77, 77));
+		CBrush* oldBrush = dc->SelectObject(&brush);
+		dc->Rectangle(0, 0, 760, 10);
+		dc->Rectangle(0, 0, 10, 700);
+		dc->Rectangle(0, 611, 760, 700);
+		dc->Rectangle(611, 10, 760, 700);
+
+		dc->SelectObject(oldPen);     // 시스템 펜 객체를 돌려줌
+		dc->SelectObject(oldBrush);
+
+		brush.DeleteObject();
+		pen.DeleteObject();
+
+		pen.CreatePen(PS_SOLID, 3, RGB(70, 70, 70));
+		oldPen = dc->SelectObject(&pen);
+
+		brush.CreateSolidBrush(RGB(83, 83, 83));
+		oldBrush = dc->SelectObject(&brush);
+
+		dc->Rectangle(640, 100, 740, 450);
+
 		/*CDC MemDC;
 		MemDC.CreateCompatibleDC(dc);
 		CBitmap image;
